@@ -1,6 +1,6 @@
 # Docker ELK stack
+*** Note: This is forked as currently [you cant extend a compose file with links or volumes defined](https://github.com/docker/compose/issues/1987). Therefore im running muiltiple -f flags on docker compose and avoiding cluttering projects with copy pasta code. ***
 
-[![Join the chat at https://gitter.im/deviantony/fig-elk](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deviantony/fig-elk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Run the latest version of the ELK (Elasticseach, Logstash, Kibana) stack with Docker and Docker-compose.
 
