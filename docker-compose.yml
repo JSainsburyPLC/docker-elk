@@ -1,28 +1,38 @@
-elasticsearch:
-  image: elasticsearch:2.3
-  command: elasticsearch -Des.network.host=0.0.0.0 -Dindices.fielddata.cache.size=4%
-  environment:
-    - ES_HEAP_SIZE=50m
-  ports:
-    - "9200:9200"
-    - "9300:9300"
-logstash:
-  image: logstash:2.3
-  command: logstash -f /etc/logstash/conf.d/logstash.conf
-  environment:
-    - LS_HEAP_SIZE=50m
-    - LS_JAVA_OPTS=-Xms50m
-  volumes:
-    - ./logstash/config:/etc/logstash/conf.d
-  ports:
-    - "9999:9999/udp"
-  links:
-    - elasticsearch
-kibana:
-  image: jsdevops/kibana:latest
-  volumes:
-    - ./kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
-  ports:
-    - "5601:5601"
-  links:
-    - elasticsearch
+version: '2'
+
+services:
+  elasticsearch:
+    image: elasticsearch:2.3
+    command: elasticsearch -Des.network.host=0.0.0.0 -Dindices.fielddata.cache.size=4%
+    environment:
+      - ES_HEAP_SIZE=100m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    restart: on-failure:5
+  logstash:
+    image: logstash:2.3
+    command: logstash -f /etc/logstash/conf.d/logstash.conf
+    environment:
+      - LS_HEAP_SIZE=50m
+      - LS_JAVA_OPTS=-Xms50m
+    volumes:
+      - ./logstash/config:/etc/logstash/conf.d
+    ports:
+      - "9999:9999/udp"
+    links:
+      - elasticsearch
+    restart: on-failure:5
+    depends_on:
+      - elasticsearch
+  kibana:
+    image: jsdevops/kibana:latest
+    volumes:
+      - ./kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch
+    restart: on-failure:5
+    depends_on:
+      - elasticsearch
